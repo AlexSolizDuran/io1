@@ -7,8 +7,8 @@ declare module "react-plotly.js" {
     layout?: Partial<Plotly.Layout>;
     config?: Partial<Plotly.Config>;
     frames?: Plotly.Frame[];
-    onInitialized?: (figure: any, graphDiv: any) => void;
-    onUpdate?: (figure: any, graphDiv: any) => void;
+    onInitialized?: (figure: Plotly.Figure, graphDiv: HTMLDivElement) => void;
+    onUpdate?: (figure: Plotly.Figure, graphDiv: HTMLDivElement) => void;
     style?: React.CSSProperties;
     className?: string;
     useResizeHandler?: boolean;

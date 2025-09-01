@@ -23,7 +23,7 @@ export default function ProgLineal() {
     setRectas([...rectas, nuevo]);
   };
   // quitar alguna restriccion
-  const quitar = (id: Number) => {
+  const quitar = (id: number) => {
     setRectas(rectas.filter((rec) => rec.id !== id));
   };
   //actualizar los parametros de las rectas
