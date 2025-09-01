@@ -3,26 +3,32 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+// una estructura para la restriccion
 type restre = {
   id: number;
   valor: [number, number, number];
   igual: string;
 };
+// estructura para recibir la lista de restricciones
 type lista = {
+  zeta : {valor:[number,number]}
   restreccion: restre[];
 };
+//estructura para guardar los puntos de cada restriccion
 type recta = {
   id: number;
   punto1: [number, number];
   punto2: [number, number];
   color: string;
 };
-export default function Grafica({ restreccion }: lista) {
+export default function Grafica({ restreccion,zeta }: lista) {
+  // funcion auxiliar para obtener un color aleatorio retorna un string
   const colorAleatorio = () =>
     "#" +
     Math.floor(Math.random() * 16777215)
       .toString(16)
       .padStart(6, "0");
+  // el hook para que las rectas se grafiquen en el servidor del cliente
   const [intersecciones, setIntersecciones] = useState<recta[]>([]);
   useEffect(() => {
     const puntos: recta[] = restreccion.map((r) => {
@@ -42,6 +48,7 @@ export default function Grafica({ restreccion }: lista) {
     setIntersecciones(puntos);
   }, [restreccion]);
 
+  // crea las rectas en una lista
   const data = intersecciones.map((rec) => ({
     x: rec.punto1,
     y: rec.punto2,
@@ -54,27 +61,26 @@ export default function Grafica({ restreccion }: lista) {
   const layout = {
     // algunas opciones para la grafica
     xaxis: {
-      range: [0, 20],
+      range: [0, 15],
       title: "x",
-      tickvals: Array.from({ length: 21 }, (_, i) => i),
-      showgrid: true,
-      gridcolor: "#ccc",
+      tickvals: Array.from({ length: 16 }, (_, i) => i),
+      zeroline: true,
     },
     yaxis: {
-      range: [0, 20],
+      range: [0, 15],
       title: "y",
-      tickvals: Array.from({ length: 21 }, (_, i) => i),
+      tickvals: Array.from({ length: 16 }, (_, i) => i),
       scaleanchor: "x",
-      showgrid: true,
-      gridcolor: "#ccc",
+      zeroline: true,
     },
     showlegend: true,
+    margin: { t: 20, r: 20, l: 20, b: 20 },
   };
 
   return (
     <div>
       <h1></h1>
-      <div>
+      <div className="">
         <Plot data={data} layout={layout}></Plot>
       </div>
     </div>

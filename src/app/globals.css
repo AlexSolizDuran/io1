@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
 input{
-  @apply border border-black
+  @apply m-2 w-15 px-2  mx-2 border border-black  rounded ;
+  
 }
