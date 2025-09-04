@@ -7,7 +7,7 @@ type recta = {
   valor: [number, number, number];
   igual: string;
 };
-type zeta = {
+type fun_obj = {
   valor: [number, number];
 };
 export default function ProgLineal() {
@@ -18,7 +18,7 @@ export default function ProgLineal() {
   ];
   //lista de restricciones
   const [rectas, setRectas] = useState<recta[]>([]);
-  const [zeta, setZeta] = useState<zeta>({ valor: [1, 1] });
+  const [zeta, setZeta] = useState<fun_obj>({ valor: [1, 1] });
   //este es para agregar una nueva restriccion
   const agregar = () => {
     const nuevoId =
@@ -51,6 +51,8 @@ export default function ProgLineal() {
       rectas.map((rec) => (rec.id === id ? { ...rec, igual: nuevoIgual } : rec))
     );
   };
+
+  
   return (
     <div>
       <div>
@@ -127,7 +129,7 @@ export default function ProgLineal() {
         ))}
       </div>
       <div>
-        <Grafica restreccion={rectas} zeta={zeta}></Grafica>
+        <Grafica restreccion={rectas} fun_obj={zeta}></Grafica>
       </div>
     </div>
   );
