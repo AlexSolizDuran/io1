@@ -36,13 +36,15 @@ export default function Grafica({ restreccion, fun_obj }: lista) {
   // hook para que las rectas se grafiquen en el servidor del cliente
   const [intersecciones, setIntersecciones] = useState<recta[]>([]);
   const max = 20;
+
+ 
   // hook que se ejecuta al montar el componente
   useEffect(() => {
     const puntos: recta[] = restreccion.map((r) => {
       const [a, b, c] = r.valor;
       let punto1: [number, number];
       let punto2: [number, number];
-
+       
       if (a === 0 && b === 0) {
         // Ecuación inválida
         punto1 = [0, 0];
@@ -51,12 +53,12 @@ export default function Grafica({ restreccion, fun_obj }: lista) {
         // Recta horizontal: y = c/b
         const y = c / b;
         punto1 = [0, y];
-        punto2 = [max, y]; // extendido al rango del layout
+        punto2 = [100, y]; // extendido al rango del layout
       } else if (b === 0) {
         // Recta vertical: x = c/a
         const x = c / a;
         punto1 = [x, 0];
-        punto2 = [x, max]; // extendido al rango del layout
+        punto2 = [x, 100]; // extendido al rango del layout
       } else {
         // Caso general
         punto1 = [c / a, 0]; // intersección con eje X
@@ -143,7 +145,7 @@ export default function Grafica({ restreccion, fun_obj }: lista) {
   ) {
     return fun_obj[0] * x + fun_obj[1] * y;
   }
-
+   const [vertices, setVertices] = useState<[number, number][]>([]);
   // Ejecutar cada vez que cambian las restricciones o función objetivo
   useEffect(() => {
     const candidatos = generarPuntosCandidatos(restreccion);
@@ -169,7 +171,24 @@ export default function Grafica({ restreccion, fun_obj }: lista) {
 
       setMaximo(max);
       setMinimo(min);
-    }
+      //cambio
+      const centro = factibles.reduce(
+      (acc, [x, y]) => [acc[0] + x, acc[1] + y],
+      [0, 0]
+    ).map(v => v / factibles.length) as [number, number];
+
+    const ordenados = [...factibles].sort((p1, p2) => {
+      const ang1 = Math.atan2(p1[1] - centro[1], p1[0] - centro[0]);
+      const ang2 = Math.atan2(p2[1] - centro[1], p2[0] - centro[0]);
+      return ang1 - ang2;
+    });
+
+    setVertices(ordenados);
+  } else {
+    setVertices([]); // no hay área factible
+  }
+    //
+    
   }, [restreccion, fun_obj]);
 
   // crea las rectas en una lista
@@ -184,17 +203,19 @@ export default function Grafica({ restreccion, fun_obj }: lista) {
 
   const layout = {
     xaxis: {
-      range: [0, 20],
+     // range: [0, 20],
       title: "x",
-      tickvals: Array.from({ length: 21 }, (_, i) => i),
+     // tickvals: Array.from({ length: 21 }, (_, i) => i),
       zeroline: true,
+      autorange: true, 
     },
     yaxis: {
-      range: [0, 20],
+      //range: [0, 20],
       title: "y",
-      tickvals: Array.from({ length: 21 }, (_, i) => i),
+    //  tickvals: Array.from({ length: 21 }, (_, i) => i),
       scaleanchor: "x",
       zeroline: true,
+      autorange: true, 
     },
     showlegend: true,
     margin: { t: 20, r: 20, l: 20, b: 20 },
@@ -238,7 +259,8 @@ if (puntosFactibles.length > 0) {
   });
 
   // Agregar traza del área factible
-  data.push({
+  if (vertices.length>0){
+     data.push({
     x: ordenados.map(p => p[0]),
     y: ordenados.map(p => p[1]),
     type: "scatter",
@@ -247,17 +269,19 @@ if (puntosFactibles.length > 0) {
     name: "Área Factible",
     fillcolor: "rgba(0,200,100,0.2)",
     line: { color: "green" }
-  } as any);
+   } as any);
+  }
+  
 }
 
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-row items-start gap-8">
+      <div className="flex-1">
         <Plot data={data} layout={layout} />
       </div>
-      <div className="text-center">
-        <h3>Puntos factibles:</h3>
+      <div className="flex-1 text-center">
+        <h3>Vertices del área factible:</h3>
         <ul>
           {puntosFactibles.map(([x, y], i) => (
             <li key={i}>

@@ -56,9 +56,12 @@ export default function ProgLineal() {
   return (
     <div>
       <div>
-        <h1 className=" text-red-600 ">esta es una prueba</h1>
-        <div>
-          <label> Z = </label>
+        <h1 className="text-center text-3xl font-bold uppercase tracking-wide">PROYECTO DE INVESTIGACION OPERATIVA I - FICCT</h1>
+        <h2 >Funcion Objetivo</h2>
+        <div >
+          
+            <label> Z = </label> 
+        
           <input
             type="number"
             value={zeta.valor[0]}
@@ -82,9 +85,9 @@ export default function ProgLineal() {
           />
           <label > x2 </label>
         </div>
-
-        <button onClick={agregar} className="p-2 bg-green-500 rounded">
-          agregar
+         
+        <button onClick={agregar} className="p-2 bg-green-500 rounded transition transform duration-300 hover:scale-110 hover:text-white">
+          Agregar Restricciones
         </button>
         {rectas.map((recta) => (
           <div key={recta.id} className="m-2">
@@ -121,14 +124,14 @@ export default function ProgLineal() {
             />
             <button
               onClick={() => quitar(recta.id)}
-              className=" p-2 bg-red-500 rounded"
+              className=" p-2 bg-red-500 rounded transition transform duration-300 hover:scale-110 hover:text-white"
             >
               Quitar
             </button>
           </div>
         ))}
       </div>
-      <div>
+      <div className="text-center">
         <Grafica restreccion={rectas} fun_obj={zeta}></Grafica>
       </div>
     </div>
